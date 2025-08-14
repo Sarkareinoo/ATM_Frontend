@@ -1,12 +1,7 @@
-import DefaultLayout from '@/layout/DefaultLayout.vue'
-import HomeView from '@/modules/home/HomeView.vue'
-import DashboardView from '@/modules/dashboard/DashboardView.vue'
-import ProductsView from '@/modules/products/ProductsView.vue'
-import TodosView from '@/modules/todos/TodosView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginForm from '@/components/LoginForm.vue';
-import UserDashboard from '@/components/UserDashboard.vue';
-import { getCurrentUserId } from '@/api/users';
+import LoginForm from '@/modules/Login/LoginForm.vue';
+import UserDashboard from '@/modules/dashboard/UserDashboard.vue';
+import api from '@/api';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,7 +12,7 @@ const router = createRouter({
       name: 'Dashboard',
       component: UserDashboard,
       beforeEnter: () => {
-        if (!getCurrentUserId()) return '/';
+        if (!api.users.getCurrentUserId()) return '/';
       }
     },
   ],

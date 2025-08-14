@@ -30,13 +30,3 @@ export async function getBalance(userId: string): Promise<number> {
   const response = await api.get<BalanceResponse>(`/Users/${userId}/balance`);
   return response.data.data;
 }
-
-export async function deposit(userId: string, amount: number) {
-  const response = await api.post('/Transaction/deposit', { userId, amount });
-  return response.data;
-}
-
-export async function withdraw(userId: string, amount: number) {
-  const response = await api.post('/Transaction/withdraw', { userId, amount });
-  return response.data;
-}

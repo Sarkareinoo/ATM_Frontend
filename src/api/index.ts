@@ -1,10 +1,13 @@
-import * as products from './products';
+import * as users from './users';
+import * as transaction from './transaction';
 
 class API {
-	products: typeof products;
+	users: typeof users;
+	transaction: typeof transaction;
 
 	constructor() {
-		this.products = products;
+		this .users = users;
+		this.transaction = transaction;
 	}
 }
 

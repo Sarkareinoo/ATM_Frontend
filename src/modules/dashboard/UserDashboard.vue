@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { getCurrentUserId, getBalance, logout } from '@/api/users';
-import { deposit, withdraw } from '@/api/transaction';
 import { useRouter } from 'vue-router';
+import api from '@/api';
 
 const router = useRouter();
-const userId = ref(getCurrentUserId());
+const userId = ref(api.users.getCurrentUserId());
 const balance = ref<number | null>(null);
 const depositAmount = ref(0);
 const withdrawAmount = ref(0);
@@ -15,7 +14,8 @@ const error = ref<string | null>(null);
 async function fetchBalance() {
   if (!userId.value) return;
   try {
-    balance.value = await getBalance(userId.value);
+    balance.value = await api.users.getBalance(userId.value);
+    error.value = null;
   } catch {
     error.value = 'Failed to fetch balance';
   }
@@ -23,27 +23,38 @@ async function fetchBalance() {
 
 async function handleDeposit() {
   if (!userId.value) return;
-  await deposit({ userId: userId.value, amount: depositAmount.value });
-  depositAmount.value = 0;
-  await fetchBalance();
-  message.value = 'Deposit successful!';
+  try {
+    await api.transaction.deposit({ userId: userId.value, amount: depositAmount.value });
+    depositAmount.value = 0;
+    await fetchBalance();
+    message.value = 'Deposit successful!';
+    error.value = null;
+  } catch {
+    error.value = 'Deposit failed';
+  }
 }
 
 async function handleWithdraw() {
   if (!userId.value) return;
-  await withdraw({ userId: userId.value, amount: withdrawAmount.value });
-  withdrawAmount.value = 0;
-  await fetchBalance();
-  message.value = 'Withdraw successful!';
+  try {
+    await api.transaction.withdraw({ userId: userId.value, amount: withdrawAmount.value });
+    withdrawAmount.value = 0;
+    await fetchBalance();
+    message.value = 'Withdraw successful!';
+    error.value = null;
+  } catch {
+    error.value = 'Withdraw failed';
+  }
 }
 
 function handleLogout() {
-  logout();
+  api.users.logout();
   router.push('/');
 }
 
 onMounted(fetchBalance);
 </script>
+
 
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100">

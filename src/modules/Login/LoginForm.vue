@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { login } from '@/api/users';
+import api from '@/api';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -10,7 +10,7 @@ const error = ref<string | null>(null);
 
 async function handleLogin() {
   try {
-    await login({ UserID: email.value, Password: password.value });
+    await api.users.login({ UserID: email.value, Password: password.value });
     router.push('/dashboard');
   } catch (e: any) {
     error.value = e?.response?.data?.message || 'Login failed';
